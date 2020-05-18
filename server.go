@@ -2,13 +2,12 @@ package main
 
 import (
   "fmt"
-  "github.com/dgrijalva/jwt-go"
   "net/http"
   "log"
   "encoding/json"
-  "strings"
   "time"
-  "github.com/oskaremilsson/spotify-controller/StoreRereshToken"
+  "github.com/dgrijalva/jwt-go"
+  "strings"
 )
 
 type HealthCheck struct {
@@ -28,11 +27,32 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	_, _ = w.Write(js)
 }
 
+func StoreRefreshToken(w http.ResponseWriter, r *http.Request) {
+  r.ParseForm()
+	token := r.Form.Get("token")
+
+	tokenParts := strings.Split(token, ".")
+
+	if len(tokenParts) > 2 {
+		data, err := jwt.DecodeSegment(tokenParts[1])
+		if err != nil {
+		fmt.Println("error:", err)
+		return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(data)
+	} else {
+		w.WriteHeader(http.StatusBadRequest)
+		_, _ = w.Write([]byte("Bad request"))
+  }
+}
+
 func main() {
   fmt.Printf("booting server...\n")
   
   http.HandleFunc("/", handler)
-  http.HandleFunc("/storeRefreshToken", StoreRereshToken.run)
+  http.HandleFunc("/storeRefreshToken", StoreRefreshToken)
   log.Fatal(http.ListenAndServe(":8080", nil))
   fmt.Printf("server running! \n")
 }
