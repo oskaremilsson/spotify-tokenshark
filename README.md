@@ -24,5 +24,6 @@ The idea is quite simple _(maybe)_:
 
 ---------------
 
-_I'm new to Go, so keep that in mind while reading the code.
-HUGE thanks to @sikevux for answering my stupid questions._
+_I'm new to Go, so keep that in mind while reading the code._
+
+_HUGE thanks to @sikevux for answering my stupid questions._
