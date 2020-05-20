@@ -10,7 +10,8 @@ _Someone_ should not need to use _my_ phone that's tethered to the car. **Let's 
 ### What about Spotify on the car display?
 Yes, it's possible to control from there.
 Maybe even play/pause or skip songs from the wheel.
-But browsing playlists, choosing artists or searching for music is often a real pain on these screens.
+
+But browsing playlists, choosing artists or searching for music is often a real pain on those screens.
 It would be much nicer experience for _someone_ to be able to use another device.
 
 ### What about Spotify Group Sessions?
