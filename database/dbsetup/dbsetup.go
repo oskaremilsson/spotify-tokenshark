@@ -12,16 +12,27 @@ import (
 
 const createTokensTable = `
 CREATE TABLE IF NOT EXISTS tokens (
-	username string PRIMARY KEY,
-   	token json NOT NULL
-) WITHOUT ROWID;
+	username TEXT PRIMARY KEY,
+  token TEXT NOT NULL
+);
+`
+
+const createConsentTable = `
+CREATE TABLE IF NOT EXISTS consent (
+	username TEXT NOT NULL,
+	allow_user TEXT NOT NULL,
+	UNIQUE(username,allow_user)
+);
 `
 
 func Init() {
 	os.MkdirAll(config.DatabaseFolder, 0755)
-
 	db, err := sql.Open("sqlite3", createDatabaseFile())
+
 	_, err = db.Exec(createTokensTable)
+	failure.Check(err)
+
+	_, err = db.Exec(createConsentTable)
 	failure.Check(err)
 
 	db.Close()
