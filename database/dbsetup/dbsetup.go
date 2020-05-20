@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"os"
 
+	_ "github.com/mattn/go-sqlite3"
+
 	"github.com/oskaremilsson/spotify-controller/config"
 	"github.com/oskaremilsson/spotify-controller/failure"
 )
@@ -15,15 +17,20 @@ CREATE TABLE IF NOT EXISTS tokens (
 ) WITHOUT ROWID;
 `
 
-//const DatabaseFileName = config.DatabaseFolder + "/" + config.DatabaseFileName
-
 func Init() {
 	os.MkdirAll(config.DatabaseFolder, 0755)
-	os.Create(config.DatabaseFileName)
 
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("sqlite3", createDatabaseFile())
 	_, err = db.Exec(createTokensTable)
 	failure.Check(err)
 
 	db.Close()
+}
+
+func createDatabaseFile() string {
+	_, err := os.Stat(config.DatabaseFileName)
+	if os.IsNotExist(err) {
+		os.Create(config.DatabaseFileName)
+	}
+	return config.DatabaseFileName
 }
