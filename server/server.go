@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/oskaremilsson/spotify-controller/database/dbsetup"
 	"github.com/oskaremilsson/spotify-controller/handler/storeRefreshToken"
 )
 
@@ -28,9 +29,13 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	fmt.Printf("Server is running...\n")
+	fmt.Printf("Setting up database...\n")
+	dbsetup.Init()
 
+	fmt.Printf("Registering handlers...\n")
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/storeRefreshToken", storeRefreshToken.Handler)
+
+	fmt.Printf("Server is running...\n")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

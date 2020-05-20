@@ -5,11 +5,12 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 
+	"github.com/oskaremilsson/spotify-controller/config"
 	"github.com/oskaremilsson/spotify-controller/failure"
 )
 
 func StoreToken(username string, token string) bool {
-	db, err := sql.Open("sqlite3", "./db/data.db")
+	db, err := sql.Open("sqlite3", config.DatabaseFileName)
 	failure.Check(err)
 
 	stmt, err := db.Prepare("INSERT INTO tokens(username, token) values(?,?)")
@@ -22,8 +23,10 @@ func StoreToken(username string, token string) bool {
 		if err != nil {
 			return false
 		}
+		db.Close()
 		return true
 	}
 
+	db.Close()
 	return true
 }
