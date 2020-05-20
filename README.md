@@ -1,7 +1,7 @@
 # spotify-controller
 
 ### What is this?
-This is a `access token` lending service for **Spotify API tokens**.
+This is, soon _(this is super early in the project)_, an `access token` lending service for **Spotify API tokens**.
 
 ### Why?
 While using _my_ phone as the driver for example Android Auto. I want _someone_ to be able to control the music on _my device_.
