@@ -1,11 +1,11 @@
 # spotify-controller
 
 ### What is this?
-This is, soon _(this is super early in the project)_, an `access token` lending service for **Spotify API tokens**.
+This is, soon _(this is super early in the project)_, an access token lending service for **Spotify API tokens**.
 
 ### Why?
 While using _my_ phone as the driver for example Android Auto. I want _someone_ to be able to control the music on _my device_.
-_Someone_ should not need to use _my_ phone that's tethered to the car. **Let's lend them my `access token`**.
+_Someone_ should not need to use _my_ phone that's tethered to the car. **Let's lend them my access token**.
 
 ### What about Spotify on the car display?
 Yes, it's possible to control from there.
