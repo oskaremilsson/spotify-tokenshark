@@ -1,25 +1,21 @@
 # spotify-controller
 
 ### What is this?
-This is a token lending service for Spotify API tokens.
+This is a `access token` lending service for **Spotify API tokens**.
 
 ### Why?
-While using my phone as the main driver for Android Auto, I want my girlfriend to be able to control the music.
-For this she should not need to use my phone that's tethered to the car.
+While using _my_ phone as the driver for example Android Auto. I want _someone_ to be able to control the music on _my device_.
+_Someone_ should not need to use _my_ phone that's tethered to the car. **Let's lend them my `access token`**.
 
 ### What about Spotify on the car display?
 Yes, it's possible to control from there.
-I can also play/pause and skip songs from the wheel.
-But browsing playlists, choosing artists or searching for music is a real pain there while driving.
-It would be much nicer experience to be able to use another phone.
+Maybe even play/pause or skip songs from the wheel.
+But browsing playlists, choosing artists or searching for music is often a real pain on these screens.
+It would be much nicer experience for _someone_ to be able to use another device.
 
 ### What about Spotify Group Sessions?
-Sure, we could set up a session each time. 
-I don't wish to this setup every time we're out for a drive.
-
-### So what is the real goal?
-I want the possibility to give certain people access to use my Spotify API token in order to control my music.
-This service will be that broker.
+We could set up a session each time, it would be nice to just setup once.
+It's great for other scenarios.
 
 ### Cool, but how?
 The idea is quite simple _(maybe)_:
