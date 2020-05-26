@@ -1,6 +1,7 @@
 package createRequest
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/oskaremilsson/spotify-controller/database"
@@ -14,6 +15,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	requesting := r.Form.Get("requesting")
 
 	username := decodeSpotifyToken.GetUsername(token)
+
+	fmt.Printf(username + "\n")
+	fmt.Printf(requesting + "\n")
 
 	if username == "bad_token" || requesting == "" {
 		info := infoJson.Parse("Missing username or requesting", false)

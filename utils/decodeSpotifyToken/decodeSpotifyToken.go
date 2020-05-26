@@ -13,7 +13,6 @@ type User struct {
 }
 
 func GetUsername(token string) string {
-	//info := infoJson.Parse("Bad token, missing username", false)
 	tokenParts := strings.Split(token, ".")
 
 	if len(tokenParts) > 2 {

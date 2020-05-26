@@ -9,6 +9,7 @@ import (
 
 	"github.com/oskaremilsson/spotify-controller/database/dbsetup"
 	"github.com/oskaremilsson/spotify-controller/handler/createRequest"
+	"github.com/oskaremilsson/spotify-controller/handler/getRequests"
 	"github.com/oskaremilsson/spotify-controller/handler/storeConsent"
 	"github.com/oskaremilsson/spotify-controller/handler/storeRefreshToken"
 )
@@ -39,6 +40,7 @@ func main() {
 	http.HandleFunc("/storeRefreshToken", storeRefreshToken.Handler)
 	http.HandleFunc("/storeConsent", storeConsent.Handler)
 	http.HandleFunc("/createRequest", createRequest.Handler)
+	http.HandleFunc("/getRequests", getRequests.Handler)
 
 	fmt.Printf("Server is running...\n")
 	log.Fatal(http.ListenAndServe(":8080", nil))
