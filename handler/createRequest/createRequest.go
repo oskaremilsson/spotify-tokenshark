@@ -1,4 +1,4 @@
-package storeConsent
+package createRequest
 
 import (
 	"net/http"
@@ -11,19 +11,19 @@ import (
 func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	token := r.Form.Get("token")
-	allow_user := r.Form.Get("allow_user")
+	requesting := r.Form.Get("requesting")
 
 	username := decodeSpotifyToken.GetUsername(token)
 
-	if username == "bad_token" || allow_user == "" {
-		info := infoJson.Parse("Missing username or allow_user", false)
+	if username == "bad_token" || requesting == "" {
+		info := infoJson.Parse("Missing username or requesting", false)
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write(info)
 		return
 	}
 
-	if database.StoreConsent(username, allow_user) {
-		info := infoJson.Parse(username+" now allow "+allow_user, true)
+	if database.CreateRequest(username, requesting) {
+		info := infoJson.Parse(username+" have requested "+requesting, true)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(info)
 		return

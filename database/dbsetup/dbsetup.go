@@ -17,11 +17,19 @@ CREATE TABLE IF NOT EXISTS tokens (
 );
 `
 
-const createConsentTable = `
-CREATE TABLE IF NOT EXISTS consent (
+const createConsentsTable = `
+CREATE TABLE IF NOT EXISTS consents (
 	username TEXT NOT NULL,
 	allow_user TEXT NOT NULL,
 	UNIQUE(username,allow_user)
+);
+`
+
+const createRequestsTable = `
+CREATE TABLE IF NOT EXISTS requests (
+	username TEXT NOT NULL,
+	requesting TEXT NOT NULL,
+	UNIQUE(username,requesting)
 );
 `
 
@@ -32,7 +40,10 @@ func Init() {
 	_, err = db.Exec(createTokensTable)
 	failure.Check(err)
 
-	_, err = db.Exec(createConsentTable)
+	_, err = db.Exec(createConsentsTable)
+	failure.Check(err)
+
+	_, err = db.Exec(createRequestsTable)
 	failure.Check(err)
 
 	db.Close()

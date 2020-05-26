@@ -32,14 +32,31 @@ func StoreToken(username string, token string) bool {
 	return true
 }
 
-func StoreConsent(username string, allowed string) bool {
+func StoreConsent(username string, allow_user string) bool {
 	db, err := sql.Open("sqlite3", config.DatabaseFileName)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("INSERT INTO consent(username, allow_user) values(?,?)")
+	stmt, err := db.Prepare("INSERT INTO consents(username, allow_user) values(?,?)")
 	failure.Check(err)
 
-	_, err = stmt.Exec(username, allowed)
+	_, err = stmt.Exec(username, allow_user)
+	if err != nil {
+		db.Close()
+		return false
+	}
+
+	db.Close()
+	return true
+}
+
+func CreateRequest(username string, requesting string) bool {
+	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	failure.Check(err)
+
+	stmt, err := db.Prepare("INSERT INTO requests(username, requesting) values(?,?)")
+	failure.Check(err)
+
+	_, err = stmt.Exec(username, requesting)
 	if err != nil {
 		db.Close()
 		return false
