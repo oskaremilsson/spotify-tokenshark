@@ -5,16 +5,16 @@ import (
 	"net/http"
 
 	"github.com/oskaremilsson/spotify-controller/database"
-	"github.com/oskaremilsson/spotify-controller/utils/decodeSpotifyToken"
 	"github.com/oskaremilsson/spotify-controller/utils/infoJson"
+	"github.com/oskaremilsson/spotify-controller/utils/spotify"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	token := r.Form.Get("token")
+	access_token := r.Form.Get("access_token")
 	requesting := r.Form.Get("requesting")
 
-	username := decodeSpotifyToken.GetUsername(token)
+	username := spotify.GetCurrentUsername(access_token)
 
 	fmt.Printf(username + "\n")
 	fmt.Printf(requesting + "\n")

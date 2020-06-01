@@ -6,8 +6,8 @@ import (
 
 	"github.com/oskaremilsson/spotify-controller/database"
 	"github.com/oskaremilsson/spotify-controller/failure"
-	"github.com/oskaremilsson/spotify-controller/utils/decodeSpotifyToken"
 	"github.com/oskaremilsson/spotify-controller/utils/infoJson"
+	"github.com/oskaremilsson/spotify-controller/utils/spotify"
 )
 
 type Requests struct {
@@ -16,9 +16,9 @@ type Requests struct {
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	token := r.Form.Get("token")
+	access_token := r.Form.Get("access_token")
 
-	username := decodeSpotifyToken.GetUsername(token)
+	username := spotify.GetCurrentUsername(access_token)
 
 	if username == "bad_token" {
 		info := infoJson.Parse("Bad token", false)
