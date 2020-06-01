@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/oskaremilsson/spotify-controller/database"
+	"github.com/oskaremilsson/spotify-controller/failure"
 	"github.com/oskaremilsson/spotify-controller/utils/infoJson"
 	"github.com/oskaremilsson/spotify-controller/utils/spotify"
 )
@@ -14,7 +15,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	access_token := r.Form.Get("access_token")
 	requesting := r.Form.Get("requesting")
 
-	username := spotify.GetCurrentUsername(access_token)
+	username, err := spotify.GetCurrentUsername(access_token)
+	failure.Check(err)
 
 	fmt.Printf(username + "\n")
 	fmt.Printf(requesting + "\n")

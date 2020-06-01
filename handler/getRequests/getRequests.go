@@ -18,7 +18,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	access_token := r.Form.Get("access_token")
 
-	username := spotify.GetCurrentUsername(access_token)
+	username, err := spotify.GetCurrentUsername(access_token)
+	failure.Check(err)
 
 	if username == "bad_token" {
 		info := infoJson.Parse("Bad token", false)

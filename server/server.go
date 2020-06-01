@@ -10,6 +10,7 @@ import (
 	"github.com/oskaremilsson/spotify-controller/database/dbsetup"
 	"github.com/oskaremilsson/spotify-controller/handler/createRequest"
 	"github.com/oskaremilsson/spotify-controller/handler/getRequests"
+	"github.com/oskaremilsson/spotify-controller/handler/requestTokens"
 	"github.com/oskaremilsson/spotify-controller/handler/storeConsent"
 	"github.com/oskaremilsson/spotify-controller/handler/storeRefreshToken"
 )
@@ -37,6 +38,7 @@ func main() {
 
 	fmt.Printf("Registering handlers...\n")
 	http.HandleFunc("/", handler)
+	http.HandleFunc("/requestTokens", requestTokens.Handler)
 	http.HandleFunc("/storeRefreshToken", storeRefreshToken.Handler)
 	http.HandleFunc("/storeConsent", storeConsent.Handler)
 	http.HandleFunc("/createRequest", createRequest.Handler)
