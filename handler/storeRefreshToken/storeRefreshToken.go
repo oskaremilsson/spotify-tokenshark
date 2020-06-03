@@ -12,16 +12,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
 
-	// validate that refresh token is valid by getting access token from it
-	access_token, err := spotify.GetAccessTokenFromRefreshToken(refresh_token)
-	if err != nil {
-		info := infoJson.Parse(err.Error(), false)
-		w.WriteHeader(http.StatusInternalServerError)
-		_, _ = w.Write(info)
-		return
-	}
-
-	username, err := spotify.GetCurrentUsername(access_token)
+	username, err := spotify.WhoAmI(refresh_token)
 
 	if err != nil {
 		info := infoJson.Parse("Could not get current user", false)

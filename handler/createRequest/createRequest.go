@@ -12,10 +12,10 @@ import (
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
-	access_token := r.Form.Get("access_token")
+	refresh_token := r.Form.Get("refresh_token")
 	requesting := r.Form.Get("requesting")
 
-	username, err := spotify.GetCurrentUsername(access_token)
+	username, err := spotify.WhoAmI(refresh_token)
 	failure.Check(err)
 
 	fmt.Printf(username + "\n")

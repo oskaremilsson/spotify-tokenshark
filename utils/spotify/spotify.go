@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -24,25 +25,13 @@ type Exchange struct {
 	Error_description string `json:"error_description"`
 }
 
-func GetCurrentUsername(access_token string) (string, error) {
-	authHeader := "Bearer " + access_token
-
-	client := &http.Client{}
-	r, err := http.NewRequest("GET", "https://api.spotify.com/v1/me", nil)
+func WhoAmI(refresh_token string) (string, error) {
+	access_token, err := GetAccessToken(refresh_token)
 	if err != nil {
 		return "", err
 	}
 
-	r.Header.Add("Content-Type", "application/json")
-	r.Header.Add("Authorization", authHeader)
-
-	resp, err := client.Do(r)
-	if err != nil {
-		return "", err
-	}
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := callApi(access_token, "GET", "https://api.spotify.com/v1/me", nil)
 	if err != nil {
 		return "", err
 	}
@@ -56,38 +45,33 @@ func GetCurrentUsername(access_token string) (string, error) {
 	return user.Username, nil
 }
 
-func GetAccessTokenFromRefreshToken(refresh_token string) (string, error) {
+func callApi(access_token string, method string, url string, data io.Reader) ([]byte, error) {
+	client := &http.Client{}
+	r, err := http.NewRequest(method, url, data)
+	if err != nil {
+		return []byte(""), err
+	}
+
+	r.Header.Add("Content-Type", "application/json")
+	r.Header.Add("Authorization", "Bearer "+access_token)
+
+	resp, err := client.Do(r)
+	if err != nil {
+		return []byte(""), err
+	}
+	defer resp.Body.Close()
+
+	return ioutil.ReadAll(resp.Body)
+}
+
+func GetAccessToken(refresh_token string) (string, error) {
 	data := url.Values{}
 	data.Set("grant_type", "refresh_token")
 	data.Set("refresh_token", refresh_token)
 
-	client := &http.Client{}
-	res, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", strings.NewReader(data.Encode()))
-	res.Header.Add("Content-Type", "application/x-www-form-urlencoded")
-	res.Header.Add("Authorization", "Basic "+base64.StdEncoding.EncodeToString([]byte(config.SpotifyClientString)))
+	exchange, err := callExchange(data)
 
-	resp, err := client.Do(res)
-	if err != nil {
-		return "", err
-	}
-
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return "", err
-	}
-
-	exchange := Exchange{}
-	err = json.Unmarshal(body, &exchange)
-	if err != nil {
-		return "", err
-	}
-
-	if resp.StatusCode != 200 || exchange.Access_token == "" {
-		return "", fmt.Errorf(exchange.Error)
-	}
-
-	return exchange.Access_token, nil
+	return exchange.Access_token, err
 }
 
 func GetTokensFromCode(code string) (string, string, error) {
@@ -96,6 +80,14 @@ func GetTokensFromCode(code string) (string, string, error) {
 	data.Set("code", code)
 	data.Set("redirect_uri", os.Getenv("SPOTIFY_REDIRECT_URI"))
 
+	exchange, err := callExchange(data)
+
+	return exchange.Access_token, exchange.Refresh_token, err
+}
+
+func callExchange(data url.Values) (Exchange, error) {
+	exchange := Exchange{}
+
 	client := &http.Client{}
 	res, err := http.NewRequest("POST", "https://accounts.spotify.com/api/token", strings.NewReader(data.Encode()))
 	res.Header.Add("Content-Type", "application/x-www-form-urlencoded")
@@ -103,24 +95,23 @@ func GetTokensFromCode(code string) (string, string, error) {
 
 	resp, err := client.Do(res)
 	if err != nil {
-		return "", "", err
+		return exchange, err
 	}
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return "", "", err
+		return exchange, err
 	}
 
-	exchange := Exchange{}
 	err = json.Unmarshal(body, &exchange)
 	if err != nil {
-		return "", "", err
+		return exchange, err
 	}
 
-	if resp.StatusCode != 200 || exchange.Refresh_token == "" {
-		return "", "", fmt.Errorf(exchange.Error)
+	if resp.StatusCode != 200 {
+		return exchange, fmt.Errorf(exchange.Error)
 	}
 
-	return exchange.Access_token, exchange.Refresh_token, nil
+	return exchange, nil
 }
