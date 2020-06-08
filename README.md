@@ -33,15 +33,13 @@ Yes, there will be some kind of client in a separate repo. Probably
 
 
 ## Development stuff
-
-#### Create Spotify API client
 * Create a Spotify API client here https://developer.spotify.com/dashboard
-* `cp env.example .env`
+* Create `.env` file `cp env.example .env`
 * Fill in `.env` with your details.
 * Install SQLite3.
-* Build the project:
+* Build the project
   `go build -o builds/server server/server.go`
-* Run the project:
+* Run the project
  `./builds/server`
 
 ---------------
