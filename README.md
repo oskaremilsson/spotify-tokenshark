@@ -1,7 +1,7 @@
 # spotify-controller
 
 ### What is this?
-This is _(soon it's super early in the project)_ a lending service for **Spotify API tokens**.
+This is a lending service for **Spotify API tokens**.
 
 ### Why?
 While using _my_ phone as the driver for example Android Auto. I want _someone_ to be able to control the music on _my device_.
@@ -19,7 +19,7 @@ We could set up a session each time, it would be nice to just setup once.
 It's great for other scenarios.
 
 ### Cool, but how?
-The idea is quite simple _(maybe)_:
+The idea is quite simple:
 * User A store their `refresh token` in the service.
 * User A gives User B the right to use it
 * User B requests an `access token` for User A by providing a personal `access token` to Spotify API 
@@ -30,6 +30,19 @@ The idea is quite simple _(maybe)_:
 
 ### What about UX?
 Yes, there will be some kind of client in a separate repo. Probably 
+
+
+## Development stuff
+
+#### Create Spotify API client
+* Create a Spotify API client here https://developer.spotify.com/dashboard
+* `cp env.example .env`
+* Fill in `.env` with your details.
+* Install SQLite3.
+* Build the project:
+  `go build -o builds/server server/server.go`
+* Run the project:
+ `./builds/server`
 
 ---------------
 

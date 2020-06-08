@@ -11,6 +11,7 @@ import (
 	"github.com/oskaremilsson/spotify-controller/database/dbsetup"
 	"github.com/oskaremilsson/spotify-controller/handler/codeExchange"
 	"github.com/oskaremilsson/spotify-controller/handler/createRequest"
+	"github.com/oskaremilsson/spotify-controller/handler/getAccessToken"
 	"github.com/oskaremilsson/spotify-controller/handler/getRequests"
 	"github.com/oskaremilsson/spotify-controller/handler/giveConsent"
 	"github.com/oskaremilsson/spotify-controller/handler/revokeConsent"
@@ -46,6 +47,7 @@ func main() {
 	http.HandleFunc("/revokeConsent", revokeConsent.Handler)
 	http.HandleFunc("/createRequest", createRequest.Handler)
 	http.HandleFunc("/getRequests", getRequests.Handler)
+	http.HandleFunc("/getAccessToken", getAccessToken.Handler)
 
 	fmt.Printf("Server is running...\n")
 	log.Fatal(http.ListenAndServe(":"+config.Port, nil))

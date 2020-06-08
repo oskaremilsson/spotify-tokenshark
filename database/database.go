@@ -110,3 +110,34 @@ func GetRequests(requesting string) []string {
 	db.Close()
 	return usernames
 }
+
+func ValidateConsent(me string, username string) bool {
+	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	failure.Check(err)
+
+	sqlStmt := "SELECT * FROM consents WHERE username = ? AND allow_user = ?"
+
+	err = db.QueryRow(sqlStmt, me, username).Scan(&me, &username)
+	db.Close()
+
+	return err == nil
+}
+
+func GetRefreshToken(username string) (string, error) {
+	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	failure.Check(err)
+
+	stmt, err := db.Prepare("SELECT token FROM tokens WHERE username = ?")
+	failure.Check(err)
+
+	refresh_token := ""
+
+	err = stmt.QueryRow(username).Scan(&refresh_token)
+	if err != nil {
+		db.Close()
+		return "", err
+	}
+
+	db.Close()
+	return refresh_token, nil
+}

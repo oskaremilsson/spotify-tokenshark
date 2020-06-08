@@ -13,7 +13,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	refresh_token := r.Form.Get("refresh_token")
 	disallow_user := r.Form.Get("disallow_user")
 
-	username, err := spotify.WhoAmI(refresh_token)
+	me, err := spotify.WhoAmI(refresh_token)
 
 	if err != nil || disallow_user == "" {
 		info := infoJson.Parse("Can't get current user or missing disallow_user", false)
@@ -22,8 +22,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if database.DeleteConsent(username, disallow_user) {
-		info := infoJson.Parse(username+" disallows "+disallow_user, true)
+	if database.DeleteConsent(me, disallow_user) {
+		info := infoJson.Parse(me+" disallows "+disallow_user, true)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(info)
 		return

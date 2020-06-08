@@ -4,7 +4,6 @@ import (
 	"net/http"
 
 	"github.com/oskaremilsson/spotify-controller/database"
-	"github.com/oskaremilsson/spotify-controller/failure"
 	"github.com/oskaremilsson/spotify-controller/utils/infoJson"
 	"github.com/oskaremilsson/spotify-controller/utils/spotify"
 )
@@ -14,18 +13,17 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	refresh_token := r.Form.Get("refresh_token")
 	requesting := r.Form.Get("requesting")
 
-	username, err := spotify.WhoAmI(refresh_token)
-	failure.Check(err)
+	me, err := spotify.WhoAmI(refresh_token)
 
-	if username == "bad_token" || requesting == "" {
-		info := infoJson.Parse("Missing username or requesting", false)
+	if err != nil || requesting == "" {
+		info := infoJson.Parse("Could not get current username or requesting", false)
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write(info)
 		return
 	}
 
-	if database.CreateRequest(username, requesting) {
-		info := infoJson.Parse(username+" have requested "+requesting, true)
+	if database.CreateRequest(me, requesting) {
+		info := infoJson.Parse(me+" have requested "+requesting, true)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(info)
 		return

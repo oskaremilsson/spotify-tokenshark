@@ -19,17 +19,16 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
 
-	username, err := spotify.WhoAmI(refresh_token)
-	failure.Check(err)
+	me, err := spotify.WhoAmI(refresh_token)
 
-	if username == "bad_token" {
+	if err != nil {
 		info := infoJson.Parse("Bad token", false)
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write(info)
 		return
 	}
 
-	requests := Requests{Requests: database.GetRequests(username), Success: true}
+	requests := Requests{Requests: database.GetRequests(me), Success: true}
 
 	json, err := json.Marshal(requests)
 	failure.Check(err)

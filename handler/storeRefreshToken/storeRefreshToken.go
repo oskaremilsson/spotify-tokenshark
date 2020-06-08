@@ -12,7 +12,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
 
-	username, err := spotify.WhoAmI(refresh_token)
+	me, err := spotify.WhoAmI(refresh_token)
 
 	if err != nil {
 		info := infoJson.Parse("Could not get current user", false)
@@ -21,8 +21,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if username != "" && database.StoreToken(username, refresh_token) {
-		info := infoJson.Parse(username+"'s refresh_token is stored!", true)
+	if database.StoreToken(me, refresh_token) {
+		info := infoJson.Parse(me+"'s refresh_token is stored!", true)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(info)
 		return
