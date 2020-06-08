@@ -13,6 +13,7 @@ import (
 	"github.com/oskaremilsson/spotify-controller/handler/createRequest"
 	"github.com/oskaremilsson/spotify-controller/handler/getRequests"
 	"github.com/oskaremilsson/spotify-controller/handler/giveConsent"
+	"github.com/oskaremilsson/spotify-controller/handler/revokeConsent"
 	"github.com/oskaremilsson/spotify-controller/handler/storeRefreshToken"
 )
 
@@ -42,6 +43,7 @@ func main() {
 	http.HandleFunc("/codeExchange", codeExchange.Handler)
 	http.HandleFunc("/storeRefreshToken", storeRefreshToken.Handler)
 	http.HandleFunc("/giveConsent", giveConsent.Handler)
+	http.HandleFunc("/revokeConsent", revokeConsent.Handler)
 	http.HandleFunc("/createRequest", createRequest.Handler)
 	http.HandleFunc("/getRequests", getRequests.Handler)
 

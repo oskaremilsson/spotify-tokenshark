@@ -1,4 +1,4 @@
-package giveConsent
+package revokeConsent
 
 import (
 	"net/http"
@@ -11,25 +11,25 @@ import (
 func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
-	allow_user := r.Form.Get("allow_user")
+	disallow_user := r.Form.Get("disallow_user")
 
 	username, err := spotify.WhoAmI(refresh_token)
 
-	if err != nil || allow_user == "" {
-		info := infoJson.Parse("Can't get current user or missing allow_user", false)
+	if err != nil || disallow_user == "" {
+		info := infoJson.Parse("Can't get current user or missing disallow_user", false)
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write(info)
 		return
 	}
 
-	if database.StoreConsent(username, allow_user) {
-		info := infoJson.Parse(username+" now allows "+allow_user, true)
+	if database.DeleteConsent(username, disallow_user) {
+		info := infoJson.Parse(username+" disallows "+disallow_user, true)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(info)
 		return
 	}
 
-	info := infoJson.Parse("Could not save to database", false)
+	info := infoJson.Parse("Could not revoke in database", false)
 	w.WriteHeader(http.StatusInternalServerError)
 	_, _ = w.Write(info)
 }
