@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 
 	"github.com/oskaremilsson/spotify-controller/config"
@@ -78,7 +77,7 @@ func GetTokensFromCode(code string) (string, string, error) {
 	data := url.Values{}
 	data.Set("grant_type", "authorization_code")
 	data.Set("code", code)
-	data.Set("redirect_uri", os.Getenv("SPOTIFY_REDIRECT_URI"))
+	data.Set("redirect_uri", config.SpotifyRedirectUri)
 
 	exchange, err := callExchange(data)
 
@@ -110,6 +109,7 @@ func callExchange(data url.Values) (Exchange, error) {
 	}
 
 	if resp.StatusCode != 200 {
+		fmt.Println(exchange.Error_description)
 		return exchange, fmt.Errorf(exchange.Error)
 	}
 
