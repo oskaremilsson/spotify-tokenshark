@@ -1,4 +1,4 @@
-package storeConsent
+package giveConsent
 
 import (
 	"net/http"
@@ -18,14 +18,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	failure.Check(err)
 
 	if username == "bad_token" || allow_user == "" {
-		info := infoJson.Parse("Missing username or allow_user", false)
+		info := infoJson.Parse("Can't get current user or missing allow_user", false)
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write(info)
 		return
 	}
 
 	if database.StoreConsent(username, allow_user) {
-		info := infoJson.Parse(username+" now allow "+allow_user, true)
+		info := infoJson.Parse(username+" now allows "+allow_user, true)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(info)
 		return

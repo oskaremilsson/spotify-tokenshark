@@ -12,6 +12,7 @@ import (
 
 type Requests struct {
 	Requests []string
+	Success  bool
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +29,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	requests := Requests{Requests: database.GetRequests(username)}
+	requests := Requests{Requests: database.GetRequests(username), Success: true}
 
 	json, err := json.Marshal(requests)
 	failure.Check(err)
