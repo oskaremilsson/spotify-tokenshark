@@ -9,6 +9,7 @@ import (
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
 
@@ -21,7 +22,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if database.StoreToken(me, refresh_token) {
+	if database.StoreToken("test", refresh_token) {
 		info := infoJson.Parse(me+"'s refresh_token is stored!", true)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(info)

@@ -16,6 +16,7 @@ type Tokens struct {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	r.ParseForm()
 
 	access_token, refresh_token, err := spotify.GetTokensFromCode(r.Form.Get("code"))

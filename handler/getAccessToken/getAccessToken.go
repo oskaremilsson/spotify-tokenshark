@@ -16,6 +16,7 @@ type Response struct {
 }
 
 func Handler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
 	username := r.Form.Get("username")
