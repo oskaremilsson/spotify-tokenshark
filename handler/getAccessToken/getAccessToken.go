@@ -6,6 +6,7 @@ import (
 
 	"github.com/oskaremilsson/spotify-controller/database"
 	"github.com/oskaremilsson/spotify-controller/failure"
+	"github.com/oskaremilsson/spotify-controller/utils/crypto"
 	"github.com/oskaremilsson/spotify-controller/utils/infoJson"
 	"github.com/oskaremilsson/spotify-controller/utils/spotify"
 )
@@ -44,6 +45,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write(info)
 		return
 	}
+
+	user_token = string(crypto.Decrypt([]byte(user_token)))
 
 	access_token, err := spotify.GetAccessToken(user_token)
 

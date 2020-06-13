@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/oskaremilsson/spotify-controller/database"
+	"github.com/oskaremilsson/spotify-controller/utils/crypto"
 	"github.com/oskaremilsson/spotify-controller/utils/infoJson"
 	"github.com/oskaremilsson/spotify-controller/utils/spotify"
 )
@@ -12,6 +13,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
+	encrypted_token := crypto.Encrypt([]byte(refresh_token))
 
 	me, err := spotify.WhoAmI(refresh_token)
 
@@ -22,8 +24,8 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if database.StoreToken("test", refresh_token) {
-		info := infoJson.Parse(me+"'s refresh_token is stored!", true)
+	if database.StoreToken(me, string(encrypted_token)) {
+		info := infoJson.Parse(me+"'s refresh_token is stored encrypted!", true)
 		w.WriteHeader(http.StatusOK)
 		_, _ = w.Write(info)
 		return
