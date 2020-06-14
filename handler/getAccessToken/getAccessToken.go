@@ -30,7 +30,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !database.ValidateConsent(me, username) {
+	if !database.ValidateConsent(me, username) && me != username {
 		info := infoJson.Parse("You don't have the proper consent", false)
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write(info)
