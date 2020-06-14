@@ -10,7 +10,6 @@ import (
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
 	encrypted_token := crypto.Encrypt([]byte(refresh_token))

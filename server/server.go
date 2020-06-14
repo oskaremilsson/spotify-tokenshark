@@ -26,7 +26,6 @@ type HealthCheck struct {
 }
 
 func statusHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	hk := HealthCheck{time.Now()}
 
 	js, err := json.Marshal(hk)
@@ -55,23 +54,30 @@ func main() {
 		Handler: handler,
 	}
 
-	router.HandlerFunc("GET", "/", statusHandler)
-	router.HandlerFunc("POST", "/codeExchange", codeExchange.Handler)
-	router.HandlerFunc("POST", "/storeRefreshToken", storeRefreshToken.Handler)
-	router.HandlerFunc("POST", "/giveConsent", giveConsent.Handler)
-	router.HandlerFunc("POST", "/revokeConsent", revokeConsent.Handler)
-	router.HandlerFunc("POST", "/createRequest", createRequest.Handler)
-	router.HandlerFunc("POST", "/getRequests", getRequests.Handler)
-	router.HandlerFunc("POST", "/getAccessToken", getAccessToken.Handler)
+	router.HandlerFunc("GET", "/", cors(statusHandler))
+	router.HandlerFunc("POST", "/codeExchange", cors(codeExchange.Handler))
+	router.HandlerFunc("POST", "/storeRefreshToken", cors(storeRefreshToken.Handler))
+	router.HandlerFunc("POST", "/giveConsent", cors(giveConsent.Handler))
+	router.HandlerFunc("POST", "/revokeConsent", cors(revokeConsent.Handler))
+	router.HandlerFunc("POST", "/createRequest", cors(createRequest.Handler))
+	router.HandlerFunc("POST", "/getRequests", cors(getRequests.Handler))
+	router.HandlerFunc("POST", "/getAccessToken", cors(getAccessToken.Handler))
 
 	router.HandleOPTIONS = true
-	router.GlobalOPTIONS = http.HandlerFunc(Cors)
+	router.GlobalOPTIONS = http.HandlerFunc(optionsCors)
 
 	fmt.Printf("Server is running...\n")
 	log.Fatal(server.ListenAndServe())
 }
 
-func Cors(w http.ResponseWriter, r *http.Request) {
+func cors(handler http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		handler(w, r)
+	}
+}
+
+func optionsCors(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("Access-Control-Request-Method") != "" {
 		header := w.Header()
 		//header.Set("Access-Control-Allow-Headers", "CONTENT-TYPE")
