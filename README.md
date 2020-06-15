@@ -22,10 +22,10 @@ It's great for other scenarios.
 The idea is quite simple:
 * User A store their `refresh token` in the service.
 * User A gives User B the right to use it
-* User B requests an `access token` for User A by providing a personal `access token` to Spotify API 
-* Service validates who User B is against Spotify API _(instead of having own auth)_
-* Service validated that User B indeed have the rights to get a token
-* Service send User B an `access token` issues for User A
+* User B requests an `access token` for User A by providing a personal `refresh token` to Spotify API 
+* Service checks who User B is against Spotify API _(instead of having own auth)_
+* Service validated that User B indeed have the rights to get a token for User A
+* Service send User B an `access token` issued for User A
 * Finally User B uses that token towards Spotify API controlling music for User A
 
 ### What about UX?
