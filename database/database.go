@@ -145,7 +145,7 @@ func ValidateConsent(me string, username string) bool {
 
 	sqlStmt := "SELECT * FROM consents WHERE username = ? AND allow_user = ?"
 
-	err = db.QueryRow(sqlStmt, me, username).Scan(&me, &username)
+	err = db.QueryRow(sqlStmt, username, me).Scan(&username, &me)
 	db.Close()
 
 	return err == nil
