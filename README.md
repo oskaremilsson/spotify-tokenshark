@@ -29,7 +29,9 @@ The idea is quite simple:
 * Finally User B uses that token towards Spotify API controlling music for User A
 
 ### What about UX?
-Yes, there will be some kind of client in a separate repo. Probably 
+Project will be at [ctrl.name](https://ctrl.name).
+
+[Github project](https://github.com/oskaremilsson/ctrl.name)
 
 
 ## Development stuff
