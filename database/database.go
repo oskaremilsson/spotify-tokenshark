@@ -156,6 +156,34 @@ func GetConsents(username string) []string {
 	return usernames
 }
 
+func GetMyConsents(username string) []string {
+	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	failure.Check(err)
+
+	stmt, err := db.Prepare("SELECT * FROM consents WHERE username = ?")
+	failure.Check(err)
+
+	usernames := []string{}
+
+	rows, err := stmt.Query(username)
+	if err != nil {
+		db.Close()
+		return usernames
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var username string
+		var allow_user string
+		err = rows.Scan(&username, &allow_user)
+		failure.Check(err)
+		usernames = append(usernames, allow_user)
+	}
+
+	db.Close()
+	return usernames
+}
+
 func ValidateConsent(me string, username string) bool {
 	db, err := sql.Open("sqlite3", config.DatabaseFileName)
 	failure.Check(err)
