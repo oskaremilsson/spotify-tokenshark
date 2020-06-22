@@ -3,6 +3,7 @@ package getAccessToken
 import (
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	"github.com/oskaremilsson/spotify-controller/database"
 	"github.com/oskaremilsson/spotify-controller/failure"
@@ -19,7 +20,7 @@ type Response struct {
 func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
-	username := r.Form.Get("username")
+	username := strings.ToLower(r.Form.Get("username"))
 
 	me, err := spotify.WhoAmI(refresh_token)
 

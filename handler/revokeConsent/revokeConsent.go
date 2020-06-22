@@ -2,6 +2,7 @@ package revokeConsent
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/oskaremilsson/spotify-controller/database"
 	"github.com/oskaremilsson/spotify-controller/utils/infoJson"
@@ -11,7 +12,7 @@ import (
 func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
-	disallow_user := r.Form.Get("disallow_user")
+	disallow_user := strings.ToLower(r.Form.Get("disallow_user"))
 
 	me, err := spotify.WhoAmI(refresh_token)
 

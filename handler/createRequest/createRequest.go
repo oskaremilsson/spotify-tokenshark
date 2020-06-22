@@ -2,6 +2,7 @@ package createRequest
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/oskaremilsson/spotify-controller/database"
 	"github.com/oskaremilsson/spotify-controller/utils/infoJson"
@@ -11,7 +12,7 @@ import (
 func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
-	requesting := r.Form.Get("requesting")
+	requesting := strings.ToLower(r.Form.Get("requesting"))
 
 	me, err := spotify.WhoAmI(refresh_token)
 
