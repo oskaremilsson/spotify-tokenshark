@@ -66,6 +66,23 @@ func DeleteConsent(username string, disallow_user string) bool {
 	return true
 }
 
+func DeleteRequest(username string, requesting string) bool {
+	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	failure.Check(err)
+
+	stmt, err := db.Prepare("DELETE FROM requests WHERE (username = ? AND requesting = ?) OR (requesting = ? AND username = ?)")
+	failure.Check(err)
+
+	_, err = stmt.Exec(username, requesting, username, requesting)
+	if err != nil {
+		db.Close()
+		return false
+	}
+
+	db.Close()
+	return true
+}
+
 func CreateRequest(username string, requesting string) bool {
 	db, err := sql.Open("sqlite3", config.DatabaseFileName)
 	failure.Check(err)
