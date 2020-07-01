@@ -23,6 +23,13 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !database.IsServiceUser(allow_user) {
+		info := infoJson.Parse(allow_user+" is not a user of service", false)
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(info)
+		return
+	}
+
 	if database.StoreConsent(me, allow_user) {
 		info := infoJson.Parse(me+" now allows "+allow_user, true)
 		w.WriteHeader(http.StatusOK)

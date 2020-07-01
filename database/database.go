@@ -100,6 +100,18 @@ func CreateRequest(username string, requesting string) bool {
 	return true
 }
 
+func IsServiceUser(username string) bool {
+	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	failure.Check(err)
+
+	sqlStmt := "SELECT username FROM tokens WHERE username = ?"
+
+	err = db.QueryRow(sqlStmt, username).Scan(&username)
+	db.Close()
+
+	return err == nil
+}
+
 func GetRequests(requesting string) []string {
 	db, err := sql.Open("sqlite3", config.DatabaseFileName)
 	failure.Check(err)

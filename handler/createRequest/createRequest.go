@@ -23,6 +23,13 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if !database.IsServiceUser(requesting) {
+		info := infoJson.Parse(requesting+" is not a user of service", false)
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write(info)
+		return
+	}
+
 	if database.CreateRequest(me, requesting) {
 		info := infoJson.Parse(me+" have requested "+requesting, true)
 		w.WriteHeader(http.StatusOK)
