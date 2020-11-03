@@ -18,6 +18,7 @@ import (
 	"github.com/oskaremilsson/spotify-controller/handler/getAccessToken"
 	"github.com/oskaremilsson/spotify-controller/handler/getConsents"
 	"github.com/oskaremilsson/spotify-controller/handler/getMyConsents"
+	"github.com/oskaremilsson/spotify-controller/handler/getMyRequests"
 	"github.com/oskaremilsson/spotify-controller/handler/getRequests"
 	"github.com/oskaremilsson/spotify-controller/handler/giveConsent"
 	"github.com/oskaremilsson/spotify-controller/handler/removeRequest"
@@ -70,6 +71,7 @@ func main() {
 
 	router.HandlerFunc("POST", "/createRequest", cors(createRequest.Handler))
 	router.HandlerFunc("POST", "/getRequests", cors(getRequests.Handler))
+	router.HandlerFunc("POST", "/getMyRequests", cors(getMyRequests.Handler))
 	router.HandlerFunc("POST", "/removeRequest", cors(removeRequest.Handler))
 	router.HandlerFunc("POST", "/acceptRequest", cors(acceptRequest.Handler))
 

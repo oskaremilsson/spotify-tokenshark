@@ -140,6 +140,34 @@ func GetRequests(requesting string) []string {
 	return usernames
 }
 
+func GetMyRequests(username string) []string {
+	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	failure.Check(err)
+
+	stmt, err := db.Prepare("SELECT * FROM requests WHERE username = ?")
+	failure.Check(err)
+
+	requests := []string{}
+
+	rows, err := stmt.Query(username)
+	if err != nil {
+		db.Close()
+		return requests
+	}
+
+	defer rows.Close()
+	for rows.Next() {
+		var username string
+		var requesting string
+		err = rows.Scan(&username, &requesting)
+		failure.Check(err)
+		requests = append(requests, requesting)
+	}
+
+	db.Close()
+	return requests
+}
+
 func GetConsents(username string) []string {
 	db, err := sql.Open("sqlite3", config.DatabaseFileName)
 	failure.Check(err)
