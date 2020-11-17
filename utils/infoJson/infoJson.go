@@ -3,7 +3,7 @@ package infoJson
 import (
 	"encoding/json"
 
-	"github.com/oskaremilsson/spotify-controller/failure"
+	"github.com/oskaremilsson/spotify-tokenshark/failure"
 )
 
 type Info struct {

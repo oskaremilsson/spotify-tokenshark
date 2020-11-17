@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/oskaremilsson/spotify-controller/database"
-	"github.com/oskaremilsson/spotify-controller/utils/infoJson"
-	"github.com/oskaremilsson/spotify-controller/utils/spotify"
+	"github.com/oskaremilsson/spotify-tokenshark/database"
+	"github.com/oskaremilsson/spotify-tokenshark/utils/infoJson"
+	"github.com/oskaremilsson/spotify-tokenshark/utils/spotify"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {

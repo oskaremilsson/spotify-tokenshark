@@ -10,7 +10,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/oskaremilsson/spotify-controller/config"
+	"github.com/oskaremilsson/spotify-tokenshark/config"
 )
 
 type User struct {

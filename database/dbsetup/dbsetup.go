@@ -6,8 +6,8 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 
-	"github.com/oskaremilsson/spotify-controller/config"
-	"github.com/oskaremilsson/spotify-controller/failure"
+	"github.com/oskaremilsson/spotify-tokenshark/config"
+	"github.com/oskaremilsson/spotify-tokenshark/failure"
 )
 
 const createTokensTable = `

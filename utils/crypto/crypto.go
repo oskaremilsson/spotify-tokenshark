@@ -8,7 +8,7 @@ import (
 	"encoding/hex"
 	"io"
 
-	"github.com/oskaremilsson/spotify-controller/config"
+	"github.com/oskaremilsson/spotify-tokenshark/config"
 )
 
 func createHash(key string) string {

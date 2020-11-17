@@ -1,4 +1,4 @@
-module github.com/oskaremilsson/spotify-controller
+module github.com/oskaremilsson/spotify-tokenshark
 
 go 1.14
 
