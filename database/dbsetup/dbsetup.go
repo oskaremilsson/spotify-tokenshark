@@ -2,9 +2,8 @@ package dbsetup
 
 import (
 	"database/sql"
-	"os"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 
 	"github.com/oskaremilsson/spotify-tokenshark/config"
 	"github.com/oskaremilsson/spotify-tokenshark/failure"
@@ -13,7 +12,7 @@ import (
 const createTokensTable = `
 CREATE TABLE IF NOT EXISTS tokens (
 	username TEXT PRIMARY KEY,
-  token TEXT NOT NULL
+  token bytea NOT NULL
 );
 `
 
@@ -34,8 +33,8 @@ CREATE TABLE IF NOT EXISTS requests (
 `
 
 func Init() {
-	os.MkdirAll(config.DatabaseFolder, 0755)
-	db, err := sql.Open("sqlite3", createDatabaseFile())
+	// os.MkdirAll(config.DatabaseFolder, 0755)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 
 	_, err = db.Exec(createTokensTable)
 	failure.Check(err)
@@ -49,10 +48,10 @@ func Init() {
 	db.Close()
 }
 
-func createDatabaseFile() string {
+/* func createDatabaseFile() string {
 	_, err := os.Stat(config.DatabaseFileName)
 	if os.IsNotExist(err) {
 		os.Create(config.DatabaseFileName)
 	}
 	return config.DatabaseFileName
-}
+} */

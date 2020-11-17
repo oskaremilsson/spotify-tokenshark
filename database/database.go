@@ -3,22 +3,22 @@ package database
 import (
 	"database/sql"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/lib/pq"
 
 	"github.com/oskaremilsson/spotify-tokenshark/config"
 	"github.com/oskaremilsson/spotify-tokenshark/failure"
 )
 
 func StoreToken(username string, token string) bool {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("INSERT INTO tokens(username, token) values(?,?)")
+	stmt, err := db.Prepare("INSERT INTO tokens (username, token) values ($1, $2)")
 	failure.Check(err)
 
 	_, err = stmt.Exec(username, token)
 	if err != nil {
-		stmt, err = db.Prepare("UPDATE tokens SET token = ? WHERE username = ?")
+		stmt, err = db.Prepare("UPDATE tokens SET token = $1 WHERE username = $2")
 		_, err = stmt.Exec(token, username)
 		if err != nil {
 			db.Close()
@@ -33,10 +33,10 @@ func StoreToken(username string, token string) bool {
 }
 
 func StoreConsent(username string, allow_user string) bool {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("INSERT INTO consents(username, allow_user) values(?,?)")
+	stmt, err := db.Prepare("INSERT INTO consents(username, allow_user) values($1, $2)")
 	failure.Check(err)
 
 	_, err = stmt.Exec(username, allow_user)
@@ -50,10 +50,10 @@ func StoreConsent(username string, allow_user string) bool {
 }
 
 func DeleteConsent(username string, disallow_user string) bool {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("DELETE FROM consents WHERE username = ? AND allow_user = ?")
+	stmt, err := db.Prepare("DELETE FROM consents WHERE username = $1 AND allow_user = $2")
 	failure.Check(err)
 
 	_, err = stmt.Exec(username, disallow_user)
@@ -67,10 +67,10 @@ func DeleteConsent(username string, disallow_user string) bool {
 }
 
 func DeleteRequest(username string, requesting string) bool {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("DELETE FROM requests WHERE (username = ? AND requesting = ?) OR (requesting = ? AND username = ?)")
+	stmt, err := db.Prepare("DELETE FROM requests WHERE (username = $1 AND requesting = $2) OR (requesting = $3 AND username = $4)")
 	failure.Check(err)
 
 	_, err = stmt.Exec(username, requesting, username, requesting)
@@ -84,10 +84,10 @@ func DeleteRequest(username string, requesting string) bool {
 }
 
 func CreateRequest(username string, requesting string) bool {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("INSERT INTO requests(username, requesting) values(?,?)")
+	stmt, err := db.Prepare("INSERT INTO requests(username, requesting) values($1, $2)")
 	failure.Check(err)
 
 	_, err = stmt.Exec(username, requesting)
@@ -101,10 +101,10 @@ func CreateRequest(username string, requesting string) bool {
 }
 
 func IsServiceUser(username string) bool {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	sqlStmt := "SELECT username FROM tokens WHERE username = ?"
+	sqlStmt := "SELECT username FROM tokens WHERE username = $1"
 
 	err = db.QueryRow(sqlStmt, username).Scan(&username)
 	db.Close()
@@ -113,10 +113,10 @@ func IsServiceUser(username string) bool {
 }
 
 func GetRequests(requesting string) []string {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("SELECT * FROM requests WHERE requesting = ?")
+	stmt, err := db.Prepare("SELECT * FROM requests WHERE requesting = $1")
 	failure.Check(err)
 
 	usernames := []string{}
@@ -141,10 +141,10 @@ func GetRequests(requesting string) []string {
 }
 
 func GetMyRequests(username string) []string {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("SELECT * FROM requests WHERE username = ?")
+	stmt, err := db.Prepare("SELECT * FROM requests WHERE username = $1")
 	failure.Check(err)
 
 	requests := []string{}
@@ -169,10 +169,10 @@ func GetMyRequests(username string) []string {
 }
 
 func GetConsents(username string) []string {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("SELECT * FROM consents WHERE allow_user = ?")
+	stmt, err := db.Prepare("SELECT * FROM consents WHERE allow_user = $1")
 	failure.Check(err)
 
 	usernames := []string{}
@@ -197,10 +197,10 @@ func GetConsents(username string) []string {
 }
 
 func GetMyConsents(username string) []string {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("SELECT * FROM consents WHERE username = ?")
+	stmt, err := db.Prepare("SELECT * FROM consents WHERE username = $1")
 	failure.Check(err)
 
 	usernames := []string{}
@@ -225,10 +225,10 @@ func GetMyConsents(username string) []string {
 }
 
 func ValidateConsent(me string, username string) bool {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	sqlStmt := "SELECT * FROM consents WHERE username = ? AND allow_user = ?"
+	sqlStmt := "SELECT * FROM consents WHERE username = $1 AND allow_user = $2"
 
 	err = db.QueryRow(sqlStmt, username, me).Scan(&username, &me)
 	db.Close()
@@ -237,10 +237,10 @@ func ValidateConsent(me string, username string) bool {
 }
 
 func GetRefreshToken(username string) (string, error) {
-	db, err := sql.Open("sqlite3", config.DatabaseFileName)
+	db, err := sql.Open("postgres", config.DatabaseUrl)
 	failure.Check(err)
 
-	stmt, err := db.Prepare("SELECT token FROM tokens WHERE username = ?")
+	stmt, err := db.Prepare("SELECT token FROM tokens WHERE username = $1")
 	failure.Check(err)
 
 	refresh_token := ""

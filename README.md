@@ -35,10 +35,13 @@ Project will be at [ctrl.name](https://ctrl.name).
 
 
 ## Development stuff
+#### Prerequisits
+* Postgresql database
 * Create a Spotify API client here https://developer.spotify.com/dashboard
 * Create `.env` file `cp env.example .env`
 * Fill in `.env` with your details.
-* Install SQLite3.
+
+#### Run locally
 * Build the project
   `go build -o builds/server server/server.go`
 * Run the project
