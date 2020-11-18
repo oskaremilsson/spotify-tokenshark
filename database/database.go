@@ -254,3 +254,38 @@ func GetRefreshToken(username string) (string, error) {
 	db.Close()
 	return refresh_token, nil
 }
+
+func DeleteMyData(username string) bool {
+	db, err := sql.Open("postgres", config.DatabaseUrl)
+	failure.Check(err)
+
+	stmt, err := db.Prepare("DELETE FROM requests WHERE username = $1 OR requesting = $1")
+	failure.Check(err)
+
+	_, err = stmt.Exec(username)
+	if err != nil {
+		db.Close()
+		return false
+	}
+
+	stmt, err = db.Prepare("DELETE FROM consents WHERE username = $1 OR allow_user = $1")
+	failure.Check(err)
+
+	_, err = stmt.Exec(username)
+	if err != nil {
+		db.Close()
+		return false
+	}
+
+	stmt, err = db.Prepare("DELETE FROM tokens WHERE username = $1")
+	failure.Check(err)
+
+	_, err = stmt.Exec(username)
+	if err != nil {
+		db.Close()
+		return false
+	}
+
+	db.Close()
+	return true
+}
