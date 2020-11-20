@@ -2,7 +2,6 @@ package getAccessToken
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -22,7 +21,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	refresh_token := r.Form.Get("refresh_token")
 	username := strings.ToLower(r.Form.Get("username"))
-	fmt.Printf(username)
 
 	me, err := spotify.WhoAmI(refresh_token)
 
