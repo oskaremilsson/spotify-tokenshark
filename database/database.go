@@ -289,3 +289,21 @@ func DeleteMyData(username string) bool {
 	db.Close()
 	return true
 }
+
+func CreateGdprConsent() string {
+	var id string
+	db, err := sql.Open("postgres", config.DatabaseUrl)
+	failure.Check(err)
+
+	stmt, err := db.Prepare("INSERT INTO gdpr_consents DEFAULT VALUES RETURNING id")
+	failure.Check(err)
+
+	err = stmt.QueryRow().Scan(&id)
+	if err != nil {
+		db.Close()
+		return ""
+	}
+
+	db.Close()
+	return id
+}

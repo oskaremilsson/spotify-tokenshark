@@ -32,9 +32,18 @@ CREATE TABLE IF NOT EXISTS requests (
 );
 `
 
+const createGdprConsentTable = `
+CREATE TABLE IF NOT EXISTS gdpr_consents (
+	id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+`
+
 func Init() {
-	// os.MkdirAll(config.DatabaseFolder, 0755)
 	db, err := sql.Open("postgres", config.DatabaseUrl)
+
+	_, err = db.Exec(`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`)
+	failure.Check(err)
 
 	_, err = db.Exec(createTokensTable)
 	failure.Check(err)
@@ -45,13 +54,8 @@ func Init() {
 	_, err = db.Exec(createRequestsTable)
 	failure.Check(err)
 
+	_, err = db.Exec(createGdprConsentTable)
+	failure.Check(err)
+
 	db.Close()
 }
-
-/* func createDatabaseFile() string {
-	_, err := os.Stat(config.DatabaseFileName)
-	if os.IsNotExist(err) {
-		os.Create(config.DatabaseFileName)
-	}
-	return config.DatabaseFileName
-} */

@@ -14,6 +14,7 @@ import (
 	"github.com/oskaremilsson/spotify-tokenshark/database/dbsetup"
 	"github.com/oskaremilsson/spotify-tokenshark/handler/acceptRequest"
 	"github.com/oskaremilsson/spotify-tokenshark/handler/codeExchange"
+	"github.com/oskaremilsson/spotify-tokenshark/handler/createGdprConsent"
 	"github.com/oskaremilsson/spotify-tokenshark/handler/createRequest"
 	"github.com/oskaremilsson/spotify-tokenshark/handler/deleteMyData"
 	"github.com/oskaremilsson/spotify-tokenshark/handler/getAccessToken"
@@ -78,6 +79,8 @@ func main() {
 	router.HandlerFunc("POST", "/getMyRequests", cors(getMyRequests.Handler))
 	router.HandlerFunc("POST", "/removeRequest", cors(removeRequest.Handler))
 	router.HandlerFunc("POST", "/acceptRequest", cors(acceptRequest.Handler))
+
+	router.HandlerFunc("POST", "/createGdprConsent", cors(createGdprConsent.Handler))
 
 	router.HandleOPTIONS = true
 	router.GlobalOPTIONS = http.HandlerFunc(optionsCors)
