@@ -24,15 +24,15 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	me, err := spotify.WhoAmI(refresh_token)
 
-	if username == "" {
-		username = me
-	}
-
 	if err != nil {
 		info := infoJson.Parse("Could not find current user", false)
 		w.WriteHeader(http.StatusBadRequest)
 		_, _ = w.Write(info)
 		return
+	}
+
+	if username == "" {
+		username = me
 	}
 
 	if !database.ValidateConsent(me, username) && me != username {
