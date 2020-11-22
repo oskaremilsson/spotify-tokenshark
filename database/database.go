@@ -286,6 +286,15 @@ func DeleteMyData(username string) bool {
 		return false
 	}
 
+	stmt, err = db.Prepare("DELETE FROM gdpr_consents WHERE username = $1")
+	failure.Check(err)
+
+	_, err = stmt.Exec(username)
+	if err != nil {
+		db.Close()
+		return false
+	}
+
 	db.Close()
 	return true
 }
