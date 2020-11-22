@@ -92,7 +92,6 @@ func main() {
 func cors(handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", config.AllowOrigin)
-		w.Header().Set("Access-Control-Allow-Credentials", "true")
 		handler(w, r)
 	}
 }
@@ -101,7 +100,6 @@ func optionsCors(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("Access-Control-Request-Method") != "" {
 		header := w.Header()
 		header.Set("Access-Control-Allow-Origin", config.AllowOrigin)
-		header.Set("Access-Control-Allow-Credentials", "true")
 	}
 
 	w.WriteHeader(http.StatusNoContent)
