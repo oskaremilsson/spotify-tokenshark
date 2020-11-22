@@ -307,3 +307,20 @@ func CreateGdprConsent() string {
 	db.Close()
 	return id
 }
+
+func ConnectGdprConsent(username string, id string) bool {
+	db, err := sql.Open("postgres", config.DatabaseUrl)
+	failure.Check(err)
+
+	stmt, err := db.Prepare("UPDATE gdpr_consents SET username = $1 WHERE id = $2::uuid")
+	failure.Check(err)
+
+	_, err = stmt.Exec(username, id)
+	if err != nil {
+		db.Close()
+		return false
+	}
+
+	db.Close()
+	return true
+}

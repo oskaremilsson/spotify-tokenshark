@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS requests (
 const createGdprConsentTable = `
 CREATE TABLE IF NOT EXISTS gdpr_consents (
 	id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+	username TEXT DEFAULT NULL,
 	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 `
