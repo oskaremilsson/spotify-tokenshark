@@ -45,6 +45,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	user_token, err := database.GetRefreshToken(username)
 	if err != nil {
 		info := infoJson.Parse("Could not find users refresh token", false)
+		database.DeleteMyData(username)
 		w.WriteHeader(http.StatusInternalServerError)
 		_, _ = w.Write(info)
 		return
@@ -52,7 +53,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	user_token = string(crypto.Decrypt([]byte(user_token)))
 
-	access_token, err := spotify.GetAccessToken(user_token)
+	access_token, err := spotify.GetAccessToken(user_token, username)
 
 	if err != nil {
 		info := infoJson.Parse("Could not get access token", false)

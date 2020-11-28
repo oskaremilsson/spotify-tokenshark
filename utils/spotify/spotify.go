@@ -11,6 +11,7 @@ import (
 	"strings"
 
 	"github.com/oskaremilsson/spotify-tokenshark/config"
+	"github.com/oskaremilsson/spotify-tokenshark/database"
 )
 
 type User struct {
@@ -25,7 +26,7 @@ type Exchange struct {
 }
 
 func WhoAmI(refresh_token string) (string, error) {
-	access_token, err := GetAccessToken(refresh_token)
+	access_token, err := GetAccessToken(refresh_token, "")
 	if err != nil {
 		return "", err
 	}
@@ -63,12 +64,18 @@ func callApi(access_token string, method string, url string, data io.Reader) ([]
 	return ioutil.ReadAll(resp.Body)
 }
 
-func GetAccessToken(refresh_token string) (string, error) {
+func GetAccessToken(refresh_token string, username string) (string, error) {
 	data := url.Values{}
 	data.Set("grant_type", "refresh_token")
 	data.Set("refresh_token", refresh_token)
 
 	exchange, err := callExchange(data)
+
+	if err != nil {
+		if err.Error() == "Refresh token revoked" && username != "" {
+			database.DeleteMyData(username)
+		}
+	}
 
 	return exchange.Access_token, err
 }
@@ -110,7 +117,7 @@ func callExchange(data url.Values) (Exchange, error) {
 
 	if resp.StatusCode != 200 {
 		fmt.Println(exchange.Error_description)
-		return exchange, fmt.Errorf(exchange.Error)
+		return exchange, fmt.Errorf(exchange.Error_description)
 	}
 
 	return exchange, nil
