@@ -11,4 +11,4 @@ var SpotifyRedirectUri = os.Getenv("SPOTIFY_REDIRECT_URI")
 var Port = os.Getenv("PORT")
 var AllowOrigin = os.Getenv("ALLOW_ORIGIN")
 var EncryptionSecretKey = os.Getenv("ENCRYPTION_SECRET_KEY")
-var DatabaseUrl = os.Getenv("DATABASE_URL") + "?sslmode=disable"
+var DatabaseUrl = os.Getenv("DATABASE_URL")
